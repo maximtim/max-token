@@ -1,46 +1,59 @@
-# Advanced Sample Hardhat Project
+## ERC-20 MaxToken
 
-This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
+ERC20 contract with additional functions setMinterRole, mint, burn, burnFrom
 
-The project comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts. It also comes with a variety of other tools, preconfigured to work with the project code.
+#### 1) Hardhat tasks:
+|Command|Description|
+|---------------------------------|-------------------------------------------------|
+| -  token-allowance       | Get token allowance to spend from owner |
+| -  token-approve         | Allow spender to transfer amount of tokens from owner |
+| -  token-balanceof       | Get token balance for user |
+| -  token-burn            | Burn some of your tokens |
+| -  token-burn-from       | Trusted burning of allowed amount of tokens |
+| -  token-deploy          | Deploy new Maxtoken contract. |
+| -  token-mint            | Mint token to some address |
+| -  token-set-minter-role | Enable or disable minting role for user (owner only) |
+| -  token-transfer        | Transfer token |
+| -  token-transfer-from   | Trusted transfer of allowed amount of tokens |
 
-Try running some of the following tasks:
+Add "--help" to these commands to see explanations.
 
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-npx hardhat help
-REPORT_GAS=true npx hardhat test
-npx hardhat coverage
-npx hardhat run scripts/deploy.ts
-TS_NODE_FILES=true npx ts-node scripts/deploy.ts
-npx eslint '**/*.{js,ts}'
-npx eslint '**/*.{js,ts}' --fix
-npx prettier '**/*.{json,sol,md}' --check
-npx prettier '**/*.{json,sol,md}' --write
-npx solhint 'contracts/**/*.sol'
-npx solhint 'contracts/**/*.sol' --fix
+Users addresses can also be indexes of accounts from PRIVATE_KEYS_LIST (0,1,2..) (or from hardhat test accounts list), for example:
+```
+> npx hardhat token-balanceof --who 1 --network localhost
 ```
 
-# Etherscan verification
-
-To try out Etherscan verification, you first need to deploy a contract to an Ethereum network that's supported by Etherscan, such as Ropsten.
-
-In this project, copy the .env.example file to a file named .env, and then edit it to fill in the details. Enter your Etherscan API key, your Ropsten node URL (eg from Alchemy), and the private key of the account which will send the deployment transaction. With a valid .env file in place, first deploy your contract:
-
-```shell
-hardhat run --network ropsten scripts/deploy.ts
+You should attach contract's address in order to use tasks:
+```
+> npx hardhat attach-contract --address <CONTRACT_ADDRESS>
 ```
 
-Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_ADDRESS` in this command:
+#### 2) Deploy script to rinkeby network 
 
-```shell
-npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
+- Windows:
+
+Addresses can also be indexes of accounts from PRIVATE_KEYS_LIST as well
+
+"--signer" is optional, default is 0
+```
+> $env:HARDHAT_NETWORK='rinkeby'
+> npx ts-node scripts/deploy.ts --supply 1000000 --name MaxToken --symbol MAXT --decimals 3 [--signer 0]
+```
+- Linux: 
+```
+>  HARDHAT_NETWORK=rinkeby npx ts-node scripts/deploy.ts --supply 1000000 --name MaxToken --symbol MAXT --decimals 3 [--signer 0]
 ```
 
-# Performance optimizations
+#### 3) Tests (solidity-coverage 100%)
+#### 4) Etherscan verification
+```
+> npx hardhat verify --network rinkeby 0x051e8B3d9C9440215Ba2D096e683562758adE247 1000000 MaxToken MAXT 3
+```
+https://rinkeby.etherscan.io/address/0x051e8B3d9C9440215Ba2D096e683562758adE247#code
+#### 5) .env settings:
+```
+PROJECT_URL="https://rinkeby.infura.io/v3/<project id here>"
+PRIVATE_KEYS_LIST=["<pk0>","<pk1>","<pk2>",...]
+ETHERSCAN_API_KEY=<api-key>
+```
 
-For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details see [the documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
