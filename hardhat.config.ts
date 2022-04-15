@@ -102,6 +102,7 @@ task("attach-contract", "Set contract address for tasks")
     }
 
     fs.writeFileSync(localConfigName, 'TOKEN_CONTRACT='+address, 'utf8');
+    console.log("Success.");
   });
 
 task("token-balanceof", "Get token balance for user")
